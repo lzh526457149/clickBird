@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>像素鸟</title>
+	<style>
+		*{
+			margin: 0px;
+			padding: 0px;
+		}
+		h1 {
+			text-align: center;
+			line-height: 140px;
+		}
+		#game {
+			left:30%;
+			top:50px;
+			width: 800px;
+			height: 600px;
+			position: relative;
+		}
+		#sky {
+			position: absolute;
+			width: 800px;
+			height: 600px;
+			background: url(images/sky.png);
+			overflow: hidden;
+			z-index: 1
+		}
+		#sky div {
+			position: absolute;
+		}
+		#bird {
+			width: 34px;
+			height: 25px;
+			background: url(images/birds.png) no-repeat -7px -9px;
+			position: absolute;
+			left: 70px;
+			top: 280px;
+			z-index: 1;	
+		}
+		#scoreB {
+			border-radius: 5px;
+			width: 220px;
+			height: 100px;
+			line-height: 50px;
+			text-align: center;
+			background-color: #f44336;
+			left: 30%;
+			top:40%;
+			position: absolute;
+			z-index: 2;
+			filter:alpha(Opacity=80);-moz-opacity:0.8;opacity: 0.8;
+			display: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			user-select: none;
+		}
+		#scoreS {
+			width: 100px;
+			height:25px;
+
+			top:10px;
+			right: 10px;
+			position: absolute;
+			z-index: 2;
+			filter:alpha(Opacity=80);-moz-opacity:0.5;opacity: 0.5;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			user-select: none;
+		}
+
+	</style>
+</head>
+<body>
+	<h1>让宁的小鸟再飞一会</h1>
+	<div id="game">
+		<div id="sky">
+			<div id="scoreS">
+		</div>
+		<div id="scoreB">
+		</div>
+		</div>
+		<div id="bird">
+		</div>
+	</div>
+	<script>
+		var scoreB = document.getElementById('scoreB');
+		var scoreS = document.getElementById('scoreS');
+		var score = 0;
+		
+		//定义游戏状态
+		var running = true;
+		//移动背景 
+		var sky	= document.getElementById('sky');  
+		var bird = document.getElementById('bird');
+		var sky1 = {
+			x:0,
+		}
+		// 初始化小鸟
+		var bird1 = {
+			x: bird.offsetLeft,
+			y: bird.offsetTop,
+			ySpeed:0
+		}
+		var score = 0;
+		var timeId = setInterval(function(){
+			if(running){
+				score += 0.03;
+				sky1.x -= 5;
+				sky.style.backgroundPositionX = sky1.x +'px';
+				//小鸟向下移动
+				bird1.ySpeed += 1;
+				if(bird1.ySpeed > 0){
+				bird.style.backgroundPositionX = "-7px";
+				}
+				bird1.y += bird1.ySpeed;
+				//超过下边界 结束游戏 
+				if(bird1.y + bird.offsetHeight > 600){
+					running = false;
+					scoreB.style.display = "block";
+					scoreB.innerHTML = "游戏结束！<br>您的分数为：<span >"+Math.round(score)+"</span>"
+					if(score < 10 ){
+								scoreB.innerHTML = "大傻逼！你瞎点个啥？<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 10 && score <20 ){
+								scoreB.innerHTML = "三岁小孩都比你会玩！快滚！<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 20 && score <30 ){
+								scoreB.innerHTML = "将将就就！在来亿把？<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 30 && score <40){
+								scoreB.innerHTML = "少侠可以哟！打个啵<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 50){
+								scoreB.innerHTML = "了不起！不愧是宁！<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					clearInterval(timeId);
+					timeId = null;
+					bird1.y = 600 - bird.offsetHeight;
+				}
+				//超过上边界 结束游戏
+				if(bird1.y < 0){
+					running = false;
+					clearInterval(timeId);
+					timeId = null;
+					bird1.y = 0;
+					scoreB.style.display = "block";
+					scoreB.innerHTML = "游戏结束！<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					if(score < 10 ){
+								scoreB.innerHTML = "大傻逼！你瞎点个啥？<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 10 && score <20 ){
+								scoreB.innerHTML = "三岁小孩都比你会玩！快滚！<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 20 && score <30 ){
+								scoreB.innerHTML = "将将就就！在来亿把？<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 30 && score <40){
+								scoreB.innerHTML = "少侠可以哟！打个啵<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 50){
+								scoreB.innerHTML = "了不起！不愧是宁！<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+				}
+			
+				bird.style.top = bird1.y +'px';
+				scoreS.innerHTML = "分数：" + Math.round(score);
+			}
+			
+		}, 30);
+		//点击界面  小鸟向上移动
+			document.onclick = function doclick() {
+				bird1.ySpeed = -10;
+				bird.style.backgroundPositionX = "-112px";
+			}
+		//创建管道
+			function createGd (place) {
+				var position = place;
+				// 添加上管道
+				var upGd = document.createElement('div');
+				var upGdh = 200 +parseInt(Math.random() * 100);
+				// 分数增加 提高游戏难度
+				if(Math.round(score) > 10){
+					upGdh = 250 +parseInt(Math.random() * 100);
+				}
+				if(Math.round(score) > 20){
+					upGdh = 300 +parseInt(Math.random() * 100);
+				}
+				if(Math.round(score) > 30){
+					upGdh = 350 +parseInt(Math.random() * 100);
+				}
+				if(Math.round(score) >40){
+					upGdh = 400 +parseInt(Math.random() * 100);
+				}
+				if(Math.round(score) >50){
+					upGdh = 450 +parseInt(Math.random() * 100);
+				}
+
+				upGd.style.width = "52px";
+				upGd.style.height = upGdh +'px';
+				upGd.style.background = 'url(images/pipe2.png) no-repeat center bottom';
+				upGd.style.top = "0px";
+				upGd.style.left = place +'px';
+				upGd.style.position='absolute';
+				sky.appendChild(upGd);
+				//添加下管道
+				var dGd = document.createElement('div');
+				var dGdh = 600 - 200 - upGdh;
+				dGd.style.width = "52px";
+				dGd.style.height = dGdh  +'px';
+				dGd.style.background = 'url(images/pipe1.png) no-repeat center top';
+				dGd.style.bottom = "0px";
+				dGd.style.left = place +'px';
+				dGd.style.position='absolute';
+				sky.appendChild(dGd);
+				var timId2 = setInterval (function () {
+					if(running){
+						position -= 1.5;
+						// 分数增加 提高游戏难度
+						if(Math.round(score) > 10){
+						position -= 2;
+						}
+						if(Math.round(score) > 20){
+							position -= 2.5;
+						}	
+						if(Math.round(score) > 30){
+							position -= 3;
+						}
+						if(Math.round(score) > 40){
+							position -= 3.5;
+						}
+						if(Math.round(score) > 50){
+							position -= 4;
+						}
+						upGd.style.left = position +'px';
+						dGd.style.left = position +'px';
+						if(position < -52){
+							position = 1000;
+						}
+						uCheck = position < bird1.x + 32 && bird1.x < position + 52 && bird1.y < upGdh ;
+						dCheck = position < bird1.x + 32 && bird1.x < position + 52 && bird1.y + 25 > upGdh +200 ;
+						console.log(dGdh);
+						console.log(bird1.y + 25 );
+						if(uCheck || dCheck ){
+							running	=false;
+							scoreB.style.display = "block";
+
+							scoreB.innerHTML = "游戏结束！<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+							if(score < 10 ){
+								scoreB.innerHTML = "大傻逼！你瞎点个啥？<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 10 && score <20 ){
+								scoreB.innerHTML = "三岁小孩都比你会玩！快滚！<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 20 && score <30 ){
+								scoreB.innerHTML = "将将就就！在来亿把？<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 30 && score <40){
+								scoreB.innerHTML = "少侠可以哟！打个啵<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+					if(score > 50){
+								scoreB.innerHTML = "了不起！不愧是宁！<br>宁的分数为：<span >"+Math.round(score)+"</span>"
+					}
+						}
+					}
+					
+				} , 30)
+
+			}
+			createGd (400);
+			createGd (600);
+			createGd (800);
+			createGd (1000);
+			createGd (1200);
+
+			
+
+
+		
+			
+
+	</script>
+</body>
+</html>
